@@ -2,7 +2,7 @@
 
 namespace App\Puzzles;
 
-class Day02ScissorsPaperRock extends AbstractPuzzle
+class Day02RockPaperScissors extends AbstractPuzzle
 {
     protected static int $day_number = 2;
 
@@ -48,7 +48,7 @@ class Day02ScissorsPaperRock extends AbstractPuzzle
 
     public function getPartOneAnswer(): int
     {
-        $strategy = array_map(fn ($line) => $this->parseStrategy($line), $this->input->lines);
+        $strategy = $this->input->lines->map($this->parseStrategy(...));
 
         $score = 0;
 
@@ -80,7 +80,7 @@ class Day02ScissorsPaperRock extends AbstractPuzzle
 
     public function getPartTwoAnswer(): int
     {
-        $strategy = array_map(fn ($line) => $this->parseStrategyPartTwo($line), $this->input->lines);
+        $strategy = $this->input->lines->map($this->parseStrategyPartTwo(...));
 
         $score = 0;
 

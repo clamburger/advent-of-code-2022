@@ -2,16 +2,23 @@
 
 namespace App\Puzzles;
 
+use Illuminate\Support\Collection;
+
 class Day03RucksackReorganization extends AbstractPuzzle
 {
     protected static int $day_number = 3;
 
-    public function getCompartments(array $grid): array
+    /**
+     * @param Collection $grid
+     * @return Collection<Collection>
+     */
+    public function getCompartments(Collection $grid): Collection
     {
-        $compartment1 = array_splice($grid, count($grid) / 2);
+        $grid = clone $grid;
+        $compartment1 = $grid->splice(count($grid) / 2);
         $compartment2 = $grid;
 
-        return [$compartment1, $compartment2];
+        return collect([$compartment1, $compartment2]);
     }
 
     public function priority(string $char): int
@@ -30,7 +37,7 @@ class Day03RucksackReorganization extends AbstractPuzzle
         foreach ($this->input->grid as $grid) {
             $bag = $this->getCompartments($grid);
 
-            $diff = array_values(array_intersect($bag[0], $bag[1]));
+            $diff = $bag[0]->intersect($bag[1])->values();
             $priority = $this->priority($diff[0]);
 
             $score += $priority;
@@ -41,12 +48,13 @@ class Day03RucksackReorganization extends AbstractPuzzle
 
     public function getPartTwoAnswer(): int
     {
-        $groups = array_chunk($this->input->grid, 3);
+        $groups = $this->input->grid->chunk(3);
 
         $score = 0;
 
+
         foreach ($groups as $group) {
-            $badge = array_values(array_intersect(...$group))[0];
+            $badge = Collection::intersectAll($group)->first();
             $priority = $this->priority($badge);
             $score += $priority;
         }

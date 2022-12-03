@@ -2,7 +2,7 @@
 
 namespace App\Puzzles;
 
-class Day01CalorieCount extends AbstractPuzzle
+class Day01CalorieCounting extends AbstractPuzzle
 {
     protected static int $day_number = 1;
 
@@ -13,9 +13,9 @@ class Day01CalorieCount extends AbstractPuzzle
     {
         $inventories = $this->input->raw_blocks;
 
-        $inventories = array_map(fn ($i) => explode("\n", $i), $inventories);
+        $inventories = $inventories->map(fn ($i) => $i->explode("\n"));
 
-        $sum = array_map(fn ($i) => array_sum($i), $inventories);
+        $sum = $inventories->map->sum();
         return max(...$sum);
     }
 
@@ -26,10 +26,9 @@ class Day01CalorieCount extends AbstractPuzzle
     {
         $inventories = $this->input->raw_blocks;
 
-        $inventories = array_map(fn ($i) => explode("\n", $i), $inventories);
+        $inventories = $inventories->map(fn ($i) => $i->explode("\n"));
 
-        $totals = array_map(fn ($i) => array_sum($i), $inventories);
-        rsort($totals);
+        $totals = $inventories->map->sum()->sortDesc()->values();
 
         return $totals[0] + $totals[1] + $totals[2];
     }

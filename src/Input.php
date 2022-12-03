@@ -3,28 +3,39 @@
 namespace App;
 
 use Exception;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Stringable;
 
 class Input
 {
     /**
      * The contents of the input file, unaltered other than removing any trailing newlines from the file.
      */
-    public readonly string $raw;
+    public readonly Stringable $raw;
 
     /**
-     * @var string[] An array of input lines, where each element represents one line.
-     *               Trailing whitespace is removed, but leading whitespace is preserved.
+     * @var Collection<Stringable> An array of input lines, where each element represents one line.
+     *                             Trailing whitespace is removed, but leading whitespace is preserved.
      */
-    public readonly array $lines;
-
-    public readonly array $grid;
-
-    public readonly array $raw_blocks;
-
-    public readonly array $lines_by_block;
+    public readonly Collection $lines;
 
     /**
-     * @param string A full path to the input file.
+     * @var Collection<Collection<Stringable>>
+     */
+    public readonly Collection $grid;
+
+    /**
+     * @var Collection<Stringable>
+     */
+    public readonly Collection $raw_blocks;
+
+    /**
+     * @var Collection<Collection<Stringable>>
+     */
+    public readonly Collection $lines_by_block;
+
+    /**
+     * @param string $filepath A full path to the input file.
      * @throws Exception Throws an Exception if the input file does not exist.
      */
     public function __construct(string $filepath)
@@ -33,16 +44,26 @@ class Input
             throw new Exception(sprintf('File %s does not exist', $filepath));
         }
 
-        $this->raw = rtrim(file_get_contents($filepath), "\r\n");
-        $this->lines = $this->explodeBlock($this->raw);
-        $this->grid = array_map('str_split', $this->lines);
+        Collection::macro('intersectAll', function ($collections) {
+            return $collections->reduce(fn ($intersection, $c) => !$intersection ? $c : $intersection->intersect($c));
+        });
 
-        $this->raw_blocks = explode("\n\n", $this->raw);
-        $this->lines_by_block = array_map($this->explodeBlock(...), $this->raw_blocks);
+        $this->raw = str(file_get_contents($filepath))
+            ->replace("\r", "") // just windows things
+            ->rtrim("\r\n");
+
+        $this->lines = $this->explodeBlock($this->raw);
+        $this->grid = $this->lines->map(fn ($line) => collect(str_split($line)));
+
+        $this->raw_blocks = $this->raw
+            ->explode("\n\n")
+            ->map(str(...));
+
+        $this->lines_by_block = $this->raw_blocks->map($this->explodeBlock(...));
     }
 
-    private function explodeBlock(string $block): array
+    private function explodeBlock(Stringable $block): Collection
     {
-        return array_map('rtrim', explode("\n", $block));
+        return $block->explode("\n")->map('rtrim');
     }
 }

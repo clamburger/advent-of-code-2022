@@ -64,6 +64,6 @@ class Input
 
     private function explodeBlock(Stringable $block): Collection
     {
-        return $block->explode("\n")->map('rtrim');
+        return $block->explode("\n")->map(fn ($s) => str(rtrim($s)));
     }
 }

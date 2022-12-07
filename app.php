@@ -33,10 +33,19 @@ foreach ($puzzles as $puzzle) {
     runPuzzle($puzzle);
 }
 
-function runPuzzle(AbstractPuzzle $puzzle)
+function runPuzzle(AbstractPuzzle $puzzle): void
 {
     echo "Day {$puzzle->getDay()}\n";
-    echo "Part One: {$puzzle->getPartOneAnswer()}\n";
-    echo "Part Two: {$puzzle->getPartTwoAnswer()}\n";
+
+    $example = $puzzle->withExampleInput();
+    if ($example) {
+        echo "Part One (example): {$example->getPartOneAnswer()}\n";
+    }
+    echo "Part One (answer): {$puzzle->getPartOneAnswer()}\n";
+    
+    if ($example) {
+        echo "Part Two (example): {$example->getPartTwoAnswer()}\n";
+    }
+    echo "Part Two (answer): {$puzzle->getPartTwoAnswer()}\n";
     echo "\n";
 }

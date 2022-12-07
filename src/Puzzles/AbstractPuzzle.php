@@ -17,16 +17,25 @@ abstract class AbstractPuzzle
     /**
      * @throws Exception Throws an exception if the $day_number is invalid or if the input doesn't exist
      */
-    public function __construct()
+    public function __construct(bool $example = false)
     {
         if (!static::$day_number) {
             throw new Exception('You need to extend and provide a valid $day_number in ' . get_class($this));
         }
 
-        $filename = sprintf('day%02d.txt', static::$day_number);
+        $filename = sprintf('%s%02d.txt', $example ? 'example' : 'day', static::$day_number);
         $filepath = __DIR__ . '/../../inputs/' . $filename;
-
+        
         $this->input = new Input($filepath);
+    }
+    
+    public function withExampleInput(): ?static
+    {
+        try {
+            return new static(true);
+        } catch (Exception $e) {
+            return null;
+        }
     }
 
     public function getDay(): int

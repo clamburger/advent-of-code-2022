@@ -3,12 +3,6 @@
 namespace App;
 
 use App\Puzzles\AbstractPuzzle;
-use App\Puzzles\Day01CalorieCounting;
-use App\Puzzles\Day02Dive;
-use App\Puzzles\Day03BinaryDiagnostic;
-use App\Puzzles\Day04GiantSquid;
-use App\Puzzles\Day05HydrothermalVenture;
-use App\Puzzles\Day06Lanternfish;
 
 class PuzzleRunner
 {

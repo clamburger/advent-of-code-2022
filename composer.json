@@ -4,7 +4,8 @@
     "php": "^8.1",
     "phpunit/phpunit": "^9.5",
     "ext-bcmath": "*",
-    "illuminate/support": "^9.42"
+    "illuminate/support": "^9.42",
+    "brick/math": "^0.10.2"
   },
   "autoload": {
     "psr-4": {

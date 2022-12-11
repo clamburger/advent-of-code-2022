@@ -42,7 +42,7 @@ function runPuzzle(AbstractPuzzle $puzzle): void
         echo "Part One (example): {$example->getPartOneAnswer()}\n";
     }
     echo "Part One (answer): {$puzzle->getPartOneAnswer()}\n";
-    
+
     if ($example) {
         echo "Part Two (example): {$example->getPartTwoAnswer()}\n";
     }

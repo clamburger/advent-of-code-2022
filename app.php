@@ -10,6 +10,8 @@ echo "Welcome to Sam's Advent of Code 2022\n";
 echo "====================================\n";
 echo "\n";
 
+ini_set('memory_limit', -1);
+
 $puzzle_runner = new PuzzleRunner();
 $puzzles = $puzzle_runner->getPuzzles();
 
@@ -35,6 +37,8 @@ foreach ($puzzles as $puzzle) {
 
 function runPuzzle(AbstractPuzzle $puzzle, array $args): void
 {
+    $date = time();
+
     echo "Day {$puzzle->getDay()}\n";
 
     $example = $puzzle->withExampleInput();
@@ -51,5 +55,6 @@ function runPuzzle(AbstractPuzzle $puzzle, array $args): void
     if (!in_array('--example-only', $args)) {
         echo "Part Two (answer): {$puzzle->getPartTwoAnswer()}\n";
     }
+
     echo "\n";
 }

@@ -156,7 +156,7 @@ class Day14RegolithReservoir extends AbstractPuzzle
         }
     }
 
-    public function getPartTwoAnswer(): mixed
+    public function getPartTwoAnswer(): int
     {
         $this->parseInput();
         $this->addFloor();

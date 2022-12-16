@@ -141,7 +141,7 @@ class Day12HillClimbingAlgorithm extends AbstractPuzzle
         return array_map(fn ($pos) => $this->map[$pos['y']][$pos['x']], $neighbors);
     }
 
-    public function getPartTwoAnswer(): mixed
+    public function getPartTwoAnswer(): int
     {
         $this->parseInput(2);
 

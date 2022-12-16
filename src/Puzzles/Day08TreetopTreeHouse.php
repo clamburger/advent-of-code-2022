@@ -103,7 +103,7 @@ class Day08TreetopTreeHouse extends AbstractPuzzle
             foreach ($row as $x => $col) {
                 $h = $this->h($x, $y);
                 $state = $this->isVisible($x, $y);
-                echo "$x, $y ($h): " . ($state ? 'visible' : '') . "\n";
+                // echo "$x, $y ($h): " . ($state ? 'visible' : '') . "\n";
                 if ($state) {
                     $visible++;
                 }

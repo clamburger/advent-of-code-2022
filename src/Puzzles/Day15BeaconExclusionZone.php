@@ -29,7 +29,7 @@ class Day15BeaconExclusionZone extends AbstractPuzzle
             $this->map[$sensor->beaconY][$sensor->beaconX] = 'B';
         }
     }
-    public function getPartOneAnswer(): mixed
+    public function getPartOneAnswer(): int
     {
         $this->parseInput();
 
@@ -103,7 +103,7 @@ class Day15BeaconExclusionZone extends AbstractPuzzle
         return $count;
     }
 
-    public function getPartTwoAnswer(): mixed
+    public function getPartTwoAnswer(): int
     {
         $this->parseInput();
 

@@ -12,7 +12,7 @@ class Day10CathodeRayTube extends AbstractPuzzle
 
     public string $output = '';
 
-    public function getPartOneAnswer(): mixed
+    public function getPartOneAnswer(): int
     {
         $this->x = 1;
 
@@ -62,7 +62,7 @@ class Day10CathodeRayTube extends AbstractPuzzle
         return array_sum($strengths);
     }
 
-    public function getPartTwoAnswer(): mixed
+    public function getPartTwoAnswer(): string
     {
         $this->x = 1;
 

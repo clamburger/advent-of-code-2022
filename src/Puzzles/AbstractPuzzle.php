@@ -43,6 +43,6 @@ abstract class AbstractPuzzle
         return static::$day_number;
     }
 
-    abstract public function getPartOneAnswer(): mixed;
-    abstract public function getPartTwoAnswer(): mixed;
+    abstract public function getPartOneAnswer(): int|string;
+    abstract public function getPartTwoAnswer(): int|string;
 }

@@ -42,18 +42,22 @@ function runPuzzle(AbstractPuzzle $puzzle, array $args): void
     echo "Day {$puzzle->getDay()}\n";
 
     $example = $puzzle->withExampleInput();
-    if ($example) {
-        echo "Part One (example): {$example->getPartOneAnswer()}\n";
-    }
-    if (!in_array('--example-only', $args)) {
-        echo "Part One (answer): {$puzzle->getPartOneAnswer()}\n";
+    if (!in_array('--part-two-only', $args)) {
+        if ($example) {
+            echo "Part One (example): {$example->getPartOneAnswer()}\n";
+        }
+        if ( ! in_array('--example-only', $args)) {
+            echo "Part One (answer): {$puzzle->getPartOneAnswer()}\n";
+        }
     }
 
-    if ($example) {
-        echo "Part Two (example): {$example->getPartTwoAnswer()}\n";
-    }
-    if (!in_array('--example-only', $args)) {
-        echo "Part Two (answer): {$puzzle->getPartTwoAnswer()}\n";
+    if (!in_array('--part-one-only', $args)) {
+        if ($example) {
+            echo "Part Two (example): {$example->getPartTwoAnswer()}\n";
+        }
+        if (!in_array('--example-only', $args)) {
+            echo "Part Two (answer): {$puzzle->getPartTwoAnswer()}\n";
+        }
     }
 
     echo "\n";

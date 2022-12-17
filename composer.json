@@ -6,7 +6,8 @@
     "ext-bcmath": "*",
     "illuminate/support": "^9.42",
     "brick/math": "^0.10.2",
-    "php-ds/php-ds": "^1.4"
+    "php-ds/php-ds": "^1.4",
+    "symfony/var-dumper": "^6.2"
   },
   "autoload": {
     "psr-4": {

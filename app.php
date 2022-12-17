@@ -43,7 +43,7 @@ function runPuzzle(AbstractPuzzle $puzzle, array $args): void
 
     $example = $puzzle->withExampleInput();
     if (!in_array('--part-two-only', $args)) {
-        if ($example) {
+        if ($example && ! in_array('--input-only', $args)) {
             echo "Part One (example): {$example->getPartOneAnswer()}\n";
         }
         if ( ! in_array('--example-only', $args)) {
@@ -52,7 +52,7 @@ function runPuzzle(AbstractPuzzle $puzzle, array $args): void
     }
 
     if (!in_array('--part-one-only', $args)) {
-        if ($example) {
+        if ($example && ! in_array('--input-only', $args)) {
             echo "Part Two (example): {$example->getPartTwoAnswer()}\n";
         }
         if (!in_array('--example-only', $args)) {

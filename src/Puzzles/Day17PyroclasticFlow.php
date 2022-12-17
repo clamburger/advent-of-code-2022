@@ -2,50 +2,17 @@
 
 namespace App\Puzzles;
 
+use App\Day17\Rock;
+
 class Day17PyroclasticFlow extends AbstractPuzzle
 {
     protected static int $day_number = 17;
-
-    public array $rocks = [
-        [
-            [1, 1, 1, 1]
-        ],
-        [
-            [0, 1, 0],
-            [1, 1, 1],
-            [0, 1, 0],
-        ],
-        [
-            [1, 1, 1],
-            [0, 0, 1],
-            [0, 0, 1],
-        ],
-        [
-            [1],
-            [1],
-            [1],
-            [1],
-        ],
-        [
-            [1, 1],
-            [1, 1],
-        ]
-    ];
 
     public array $chamber = [];
 
     public array $instructions = [];
 
     public int $knownHighest = -1;
-
-    public function getRock(int $i) {
-        return $this->rocks[$i % 5];
-    }
-
-    public function addChamberRow()
-    {
-        $this->chamber[] = [0, 0, 0, 0, 0, 0, 0];
-    }
 
     public function visualise(?Rock $rock = null, ?string $lastInstruction = null)
     {
@@ -95,30 +62,20 @@ class Day17PyroclasticFlow extends AbstractPuzzle
 
     public function highestLine(): int
     {
-//        $chamber = array_reverse($this->chamber, true);
-//
-//        foreach ($chamber as $i => $contents) {
-//            if (!empty(array_filter($contents))) {
-//                return $i;
-//            }
-//        }
-
-//        return -1;
-
         return $this->knownHighest;
     }
 
-    private function colour(string $string, int $colour)
+    private function colour(string $string, int $colour): string
     {
         return "\033[{$colour}m" . $string . "\033[0m";
     }
 
-    public function getInstruction(int $i)
+    public function getInstruction(int $i): string
     {
         return $this->instructions[$i % count($this->instructions)];
     }
 
-    public function getPartOneAnswer(): int|string
+    public function getPartOneAnswer(): int
     {
         $this->chamber = [];
         $this->instructions = $this->input->grid[0]->toArray();
@@ -127,12 +84,6 @@ class Day17PyroclasticFlow extends AbstractPuzzle
 
         for ($i = 0; $i < 2001; $i++) {
             $rock = new Rock($this, $i);
-
-//            while (!isset($this->chamber[$rock->y + $rock->height - 1])) {
-//                $this->addChamberRow();
-//            }
-
-            $instruction = null;
 
 //            $this->visualise($rock, 'New');
 
@@ -211,19 +162,18 @@ class Day17PyroclasticFlow extends AbstractPuzzle
         return $lines;
     }
 
+    // Properties for Part 2
+
     public string $lineCycle;
-
     public int $lineCycleLength;
-
     public int $lineCycleStart;
-
     public int $rockCycleStart;
-
     public int $rockCycleLength;
-
     public int $heightAddedEachCycle;
+    public int $heightUpToStartOfFirstCycle;
+    public int $lastCycleFound = 0;
 
-    public function getPartTwoAnswer(): int|string
+    public function getPartTwoAnswer(): int
     {
         $this->instructions = $this->input->grid[0]->toArray();
 
@@ -252,57 +202,7 @@ class Day17PyroclasticFlow extends AbstractPuzzle
 
         return $this->getFinalAnswer() . "\n";
 
-
-        $this->determineCycle();
-        return -1;
-
-        // STEP 1: determine the rock cycle
-
-//        for ($i = 0; $i < )
-
-//        for ($j = 2000; $j <= 2000; $j++) {
-            $this->chamber = [];
-            $instructionIndex = 0;
-
-//            echo "$j\n";
-            for ($i = 0; $i < 2022; $i++) {
-                $rock = new Rock($this, $i);
-
-                $instruction = null;
-
-                while (!$rock->stopped) {
-                    $instruction = $this->getInstruction($instructionIndex);
-                    $instructionIndex++;
-
-                    if ($instruction === '<') {
-                        $rock->left();
-                    } elseif ($instruction === '>') {
-                        $rock->right();
-                    }
-
-                    $rock->down();
-                }
-
-                if ($this->checkLastCycle()) {
-                    echo "Rock $i: cycle matches\n";
-                }
-//                if ($i % )
-
-//            dump($i);
-//            dump($this->getDistinctRows());
-            }
-
-//            $this->detectCycles();
-//        }
-
-//        $this->visualise();
-
-//        dump($this->getDistinctRows());
-
-//        $this->detectCycles();
-
-
-        return $this->highestLine() + 1;
+//        $this->determineCycle();
     }
 
     public function getFinalAnswer(): int
@@ -338,8 +238,6 @@ class Day17PyroclasticFlow extends AbstractPuzzle
         for ($i = 0; $i <= $goUpTo; $i++) {
             $rock = new Rock($this, $i);
 
-            $instruction = null;
-
             while (!$rock->stopped) {
                 $instruction = $this->getInstruction($instructionIndex);
                 $instructionIndex++;
@@ -360,10 +258,6 @@ class Day17PyroclasticFlow extends AbstractPuzzle
 
         return $height;
     }
-
-    public int $heightUpToStartOfFirstCycle;
-
-    public int $lastCycleFound = 0;
 
     public function determineCycle()
     {
@@ -484,6 +378,15 @@ class Day17PyroclasticFlow extends AbstractPuzzle
         return false;
     }
 
+    /**
+     * Determine if the current chamber ends with the line cycle.
+     *
+     * Doesn't work properly, because a rock that ends a cycle can also add new
+     * lines that are part of the next cycle, therefore str_ends_with might never
+     * return true.
+     *
+     * @return bool
+     */
     public function endsWithCycle(): bool
     {
         $chambers = $this->getChambersById();
@@ -564,128 +467,5 @@ class Day17PyroclasticFlow extends AbstractPuzzle
         }
 
         return null;
-    }
-
-
-    public function rowFull(int $y)
-    {
-        return count($this->chamber[$y] ?? []) === 7;
-    }
-
-    public function cullFrom(int $y)
-    {
-        while (array_key_first($this->chamber) < $y) {
-            unset($this->chamber[array_key_first($this->chamber)]);
-        }
-//        echo "ROW FULL $y\n";
-//        echo count($this->chamber) . "\n";
-    }
-}
-
-class Rock {
-    public array $pattern;
-
-    public int $height;
-
-    public int $width;
-
-    public int $x = 2;
-
-    public int $y;
-
-    public bool $stopped = false;
-
-    public function __construct(public Day17PyroclasticFlow $puzzle, public int $id)
-    {
-        $this->pattern = $this->puzzle->getRock($id);
-        $this->height = count($this->pattern);
-        $this->width = count($this->pattern[0]);
-
-        $this->y = $this->puzzle->highestLine() + 4;
-    }
-
-    public function on(int $x, int $y) {
-        return !empty($this->pattern[$y - $this->y][$x - $this->x]);
-    }
-
-    public function canMoveX(int $moveX, int $moveY = 0)
-    {
-        if ($this->stopped) {
-            return false;
-        }
-
-        if ($this->x + $moveX < 0) {
-            return false;
-        }
-
-        if ($this->x + $moveX + $this->width > 7) {
-            return false;
-        }
-
-        if ($this->y + $moveY < 0) {
-            return false;
-        }
-
-        foreach ($this->pattern as $y => $row) {
-            foreach ($row as $x => $value) {
-                if (!$value) {
-                    continue;
-                }
-
-                if (!empty($this->puzzle->chamber[$y + $this->y + $moveY][$x + $this->x + $moveX])) {
-                    return false;
-                }
-            }
-        }
-
-        return true;
-    }
-
-    public function left()
-    {
-        if ($this->canMoveX(-1)) {
-            $this->x--;
-        }
-    }
-
-    public function right()
-    {
-        if ($this->canMoveX(1)) {
-            $this->x++;
-        }
-    }
-
-    public function down(): bool
-    {
-        if ($this->canMoveX(0, -1)) {
-            $this->y--;
-            return true;
-        }
-
-        $this->stop();
-        return false;
-    }
-
-    public function stop()
-    {
-        foreach ($this->pattern as $y => $row) {
-            foreach ($row as $x => $value) {
-                if (!$value) {
-                    continue;
-                }
-
-                $this->puzzle->chamber[$y + $this->y][$x + $this->x] = 1;
-                $this->pattern = [];
-                $this->stopped = true;
-
-//                if ($this->puzzle->rowFull($y + $this->y)) {
-//                    $this->puzzle->cullFrom($y + $this->y - 1);
-//                }
-
-                if ($this->puzzle->knownHighest < $this->y + $this->height - 1) {
-                    $this->puzzle->knownHighest = $this->y + $this->height - 1;
-                }
-            }
-        }
     }
 }

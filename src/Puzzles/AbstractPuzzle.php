@@ -17,25 +17,45 @@ abstract class AbstractPuzzle
     /**
      * @throws Exception Throws an exception if the $day_number is invalid or if the input doesn't exist
      */
-    public function __construct(bool $example = false)
+    public function __construct()
     {
         if (!static::$day_number) {
             throw new Exception('You need to extend and provide a valid $day_number in ' . get_class($this));
         }
-
-        $filename = sprintf('%s%02d.txt', $example ? 'example' : 'day', static::$day_number);
-        $filepath = __DIR__ . '/../../inputs/' . $filename;
-        
-        $this->input = new Input($filepath);
     }
-    
-    public function withExampleInput(): ?static
+
+    public static function createFromFile(string $filepath): static
     {
-        try {
-            return new static(true);
-        } catch (Exception $e) {
-            return null;
+        if (!file_exists($filepath)) {
+            throw new Exception(sprintf('File %s does not exist', $filepath));
         }
+
+        $puzzle = new static;
+        $contents = file_get_contents($filepath);
+        $puzzle->input = new Input($contents);
+
+        return $puzzle;
+    }
+
+    public static function createFromInput(): static
+    {
+        $filename = sprintf('%s%02d.txt', 'day', static::$day_number);
+        $filepath = __DIR__ . '/../../inputs/' . $filename;
+        return self::createFromFile($filepath);
+    }
+
+    public static function createFromExample(): static
+    {
+        $filename = sprintf('%s%02d.txt', 'example', static::$day_number);
+        $filepath = __DIR__ . '/../../inputs/' . $filename;
+        return self::createFromFile($filepath);
+    }
+
+    public static function createFromString(string $input): static
+    {
+        $puzzle = new static;
+        $puzzle->input = new Input($input);
+        return $puzzle;
     }
 
     public function getDay(): int

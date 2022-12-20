@@ -38,17 +38,13 @@ class Input
      * @param string $filepath A full path to the input file.
      * @throws Exception Throws an Exception if the input file does not exist.
      */
-    public function __construct(string $filepath)
+    public function __construct(string $contents)
     {
-        if (!file_exists($filepath)) {
-            throw new Exception(sprintf('File %s does not exist', $filepath));
-        }
-
         Collection::macro('intersectAll', function ($collections) {
             return $collections->reduce(fn ($intersection, $c) => !$intersection ? $c : $intersection->intersect($c));
         });
 
-        $this->raw = str(file_get_contents($filepath))
+        $this->raw = str($contents)
             ->replace("\r", "") // just windows things
             ->rtrim("\r\n");
 

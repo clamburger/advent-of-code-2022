@@ -37,22 +37,20 @@ foreach ($puzzles as $puzzle) {
 
 function runPuzzle(AbstractPuzzle $puzzle, array $args): void
 {
-    $date = time();
-
     echo "Day {$puzzle->getDay()}\n";
 
-    $example = $puzzle->withExampleInput();
+    $example = $puzzle::createFromExample();
     if (!in_array('--part-two-only', $args)) {
-        if ($example && ! in_array('--input-only', $args)) {
+        if (!in_array('--input-only', $args)) {
             echo "Part One (example): {$example->getPartOneAnswer()}\n";
         }
-        if ( ! in_array('--example-only', $args)) {
+        if (!in_array('--example-only', $args)) {
             echo "Part One (answer): {$puzzle->getPartOneAnswer()}\n";
         }
     }
 
     if (!in_array('--part-one-only', $args)) {
-        if ($example && ! in_array('--input-only', $args)) {
+        if (!in_array('--input-only', $args)) {
             echo "Part Two (example): {$example->getPartTwoAnswer()}\n";
         }
         if (!in_array('--example-only', $args)) {

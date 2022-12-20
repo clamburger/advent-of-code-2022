@@ -16,8 +16,10 @@ class PuzzleRunner
 
         foreach ($puzzle_files as $file) {
             $class_name = basename($file, '.php');
+
+            /** @var class-string<AbstractPuzzle> $full_class_name */
             $full_class_name = 'App\\Puzzles\\' . $class_name;
-            $puzzle = new $full_class_name;
+            $puzzle = $full_class_name::createFromInput();
             $this->puzzles[$puzzle->getDay()] = $puzzle;
         }
 

@@ -18,6 +18,7 @@ $puzzles = $puzzle_runner->getPuzzles();
 if (isset($argv[1])) {
     $day = $argv[1];
     if ($day === 'latest') {
+//        runPuzzle($puzzles[19], $argv);
         runPuzzle(array_values($puzzles)[0], $argv);
         exit(0);
     }
